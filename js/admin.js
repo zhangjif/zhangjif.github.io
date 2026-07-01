@@ -255,13 +255,23 @@
     };
 
     try {
+      let result;
       if (editingId) {
-        await BlogStore.updatePost(editingId, data);
+        result = await BlogStore.updatePost(editingId, data);
         showToast("更新成功", "success");
       } else {
-        await BlogStore.createPost(data);
+        result = await BlogStore.createPost(data);
         showToast("创建成功", "success");
       }
+      // 显示 commit 链接，方便用户去 GitHub 验证
+      if (result && result.commitUrl) {
+        console.log("GitHub Commit:", result.commitUrl);
+        console.log("文件位置:", result.fileUrl);
+        setTimeout(() => {
+          showToast("已提交到 GitHub，点刷新查看列表", "info");
+        }, 1500);
+      }
+      // 返回列表，会自动用 API（带 token）重新读取，立即看到新博客
       showAdmin();
     } catch (err) {
       showToast("保存失败: " + err.message, "error");

@@ -67,16 +67,36 @@
   }
 
   /**
-   * 读取博客列表（访客可用，无需 Token）
+   * 读取博客列表
+   * - 有 Token（管理员）：用 GitHub API 读取，绕过 CDN 缓存，立即获取最新数据
+   * - 无 Token（访客）：用 raw URL 读取，可能有 ~5 分钟 CDN 缓存延迟
    * 失败时返回 null，调用方可回退到 CONFIG.posts
    */
   async function listPosts() {
+    const token = getToken();
     try {
-      const res = await fetch(rawUrl(), { cache: "no-store" });
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (data && Array.isArray(data.posts)) return data.posts;
-      return null;
+      if (token) {
+        // 管理员：用 API 读取，绕过缓存
+        const res = await fetch(apiUrl(), {
+          headers: {
+            Authorization: `token ${token}`,
+            Accept: "application/vnd.github.raw"
+          },
+          cache: "no-store"
+        });
+        if (res.status === 404) return null; // 文件尚未创建
+        if (!res.ok) throw new Error(`API 读取失败: ${res.status}`);
+        const data = await res.json();
+        if (data && Array.isArray(data.posts)) return data.posts;
+        return null;
+      } else {
+        // 访客：用 raw URL 读取（可能有 CDN 缓存）
+        const res = await fetch(rawUrl(), { cache: "no-store" });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (data && Array.isArray(data.posts)) return data.posts;
+        return null;
+      }
     } catch (e) {
       console.warn("store.listPosts 失败:", e.message);
       return null;
@@ -140,7 +160,13 @@
       const err = await res.json().catch(() => ({}));
       throw new Error(`写入失败: ${res.status} ${err.message || ""}`);
     }
-    return res.json();
+    const result = await res.json();
+    // 返回包含 commit 信息的结果，便于调试
+    return {
+      commit: result.commit || null,
+      commitUrl: (result.commit && result.commit.html_url) || "",
+      fileUrl: (result.content && result.content.html_url) || ""
+    };
   }
 
   /**
