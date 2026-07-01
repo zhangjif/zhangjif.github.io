@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>博客管理 - 个人主页</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* 管理界面专用样式 */
+    .admin-wrap { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+    .admin-card {
+      background: rgba(20, 26, 48, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 28px 30px;
+      margin-bottom: 24px;
+    }
+    .admin-card h2 {
+      color: #fff; font-size: 22px; margin-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; color: #c9d1e3; font-size: 14px; margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 10px 12px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px; color: #fff; font-size: 14px;
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none; border-color: #7ec1ff;
+    }
+    .form-group textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+    .form-group textarea.editor { min-height: 320px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn {
+      padding: 10px 20px; border: none; border-radius: 6px;
+      font-size: 14px; cursor: pointer; font-family: inherit;
+      transition: all .2s;
+    }
+    .btn-primary { background: #2f7ad6; color: #fff; }
+    .btn-primary:hover { background: #3d8be8; }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+    .btn-danger { background: #c0353d; color: #fff; }
+    .btn-danger:hover { background: #d4454d; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .toolbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th, .admin-table td {
+      padding: 12px 10px; text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: #d8e0ee; font-size: 14px;
+    }
+    .admin-table th { color: #9fb3d1; font-weight: 600; font-size: 13px; }
+    .admin-table tr:hover { background: rgba(255,255,255,0.03); }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 12px;
+    }
+    .badge.text { background: rgba(126,193,255,0.15); color: #7ec1ff; }
+    .badge.audio { background: rgba(255,183,107,0.15); color: #ffb76b; }
+    .badge.video { background: rgba(255,107,140,0.15); color: #ff6b8c; }
+    .badge.mixed { background: rgba(150,230,160,0.15); color: #96e6a0; }
+    .toast {
+      position: fixed; top: 20px; right: 20px; z-index: 200;
+      padding: 14px 22px; border-radius: 8px; color: #fff;
+      font-size: 14px; box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+      opacity: 0; transform: translateY(-10px);
+      transition: opacity .3s, transform .3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: #2e7d4f; }
+    .toast.error { background: #c0353d; }
+    .toast.info { background: #2f7ad6; }
+    .empty-row td { text-align: center; color: #9fb3d1; font-style: italic; padding: 30px; }
+    .token-hint { font-size: 12px; color: #9fb3d1; margin-top: 6px; line-height: 1.6; }
+    .token-hint a { color: #7ec1ff; }
+    .editor-toolbar { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+    .editor-toolbar button {
+      padding: 4px 10px; font-size: 13px;
+      background: rgba(255,255,255,0.08); color: #c9d1e3;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+      cursor: pointer; font-family: inherit;
+    }
+    .editor-toolbar button:hover { background: rgba(255,255,255,0.16); }
+    .hidden { display: none !important; }
+    .login-box { max-width: 380px; margin: 80px auto; }
+    .login-box h1 { color: #fff; text-align: center; margin-bottom: 24px; font-size: 26px; }
+    .switch-link { color: #7ec1ff; cursor: pointer; font-size: 13px; }
+    .switch-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <!-- 背景层 -->
+  <div id="bg-layer"></div>
+  <div id="bg-overlay"></div>
+
+  <!-- 背景音乐播放器 -->
+  <div id="bgm-player" class="bgm-player">
+    <button id="bgm-toggle" class="bgm-toggle" title="背景音乐">
+      <span class="bgm-icon-play">▶</span>
+      <span class="bgm-icon-pause" style="display:none;">⏸</span>
+    </button>
+    <span class="bgm-label">背景音乐</span>
+  </div>
+
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" id="nav-name">主页</a>
+      <div class="nav-links">
+        <a href="index.html">返回主页</a>
+        <a href="blog.html">博客</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 登录区（密码 + Token） -->
+  <section id="login-section" class="admin-wrap">
+    <div class="admin-card login-box">
+      <h1>博客管理</h1>
+
+      <!-- 第一步：密码 -->
+      <div id="pwd-step">
+        <div class="form-group">
+          <label>管理密码</label>
+          <input type="password" id="admin-pwd" placeholder="请输入管理密码" />
+        </div>
+        <button class="btn btn-primary" id="pwd-btn" style="width:100%;">进入</button>
+      </div>
+
+      <!-- 第二步：Token -->
+      <div id="token-step" class="hidden">
+        <div class="form-group">
+          <label>GitHub Personal Access Token</label>
+          <input type="password" id="admin-token" placeholder="ghp_xxxxxxxx" />
+          <p class="token-hint">
+            需要仓库 Contents 读写权限。建议使用细粒度 Token，仅授予本仓库的 Contents: Read and write。<br>
+            <a href="https://github.com/settings/tokens?type=beta" target="_blank">前往生成 Token →</a><br>
+            Token 仅保存在当前浏览器会话，关闭浏览器后清除。
+          </p>
+        </div>
+        <button class="btn btn-primary" id="token-btn" style="width:100%;">保存并进入管理</button>
+        <p style="text-align:center;margin-top:12px;">
+          <span class="switch-link" id="logout-pwd">切换密码</span>
+        </p>
+      </div>
+
+      <p id="login-error" class="token-hint" style="color:#ff6b8c;text-align:center;margin-top:12px;"></p>
+    </div>
+  </section>
+
+  <!-- 管理主界面 -->
+  <section id="admin-section" class="admin-wrap hidden">
+    <!-- 工具栏 -->
+    <div class="toolbar">
+      <h2 style="color:#fff;border:none;padding:0;margin:0;">博客管理（共 <span id="post-count">0</span> 篇）</h2>
+      <div>
+        <button class="btn btn-secondary btn-sm" id="reload-btn">刷新</button>
+        <button class="btn btn-secondary btn-sm" id="change-token-btn">更换 Token</button>
+        <button class="btn btn-primary btn-sm" id="new-post-btn">+ 新建博客</button>
+      </div>
+    </div>
+
+    <!-- 博客列表 -->
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>类型</th>
+            <th>日期</th>
+            <th>ID</th>
+            <th style="width:160px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="post-tbody">
+          <tr class="empty-row"><td colspan="5">加载中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 编辑表单（模态） -->
+  <section id="editor-section" class="admin-wrap hidden">
+    <div class="admin-card">
+      <h2 id="editor-title">新建博客</h2>
+      <form id="post-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>标题 *</label>
+            <input type="text" id="f-title" required />
+          </div>
+          <div class="form-group">
+            <label>ID *（英文/数字/连字符，唯一）</label>
+            <input type="text" id="f-id" required pattern="[a-zA-Z0-9_-]+" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>日期 *</label>
+            <input type="date" id="f-date" required />
+          </div>
+          <div class="form-group">
+            <label>类型 *</label>
+            <select id="f-type">
+              <option value="text">文字</option>
+              <option value="audio">语音</option>
+              <option value="video">视频</option>
+              <option value="mixed">混合</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>摘要</label>
+          <textarea id="f-summary" placeholder="一句话简介..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>封面图 URL（可留空）</label>
+          <input type="text" id="f-cover" placeholder="assets/images/xxx.jpg 或完整 URL" />
+        </div>
+        <div class="form-group">
+          <label>音频文件路径（type=audio 或 mixed 时填写）</label>
+          <input type="text" id="f-audio" placeholder="assets/posts/xxx.mp3" />
+        </div>
+        <div class="form-group">
+          <label>视频文件路径（type=video 或 mixed 时填写）</label>
+          <input type="text" id="f-video" placeholder="assets/posts/xxx.mp4" />
+        </div>
+        <div class="form-group">
+          <label>正文（Markdown）</label>
+          <div class="editor-toolbar">
+            <button type="button" data-md="## ">标题</button>
+            <button type="button" data-md="**" data-wrap="**">加粗</button>
+            <button type="button" data-md="*" data-wrap="*">斜体</button>
+            <button type="button" data-md="`" data-wrap="`">代码</button>
+            <button type="button" data-md="- ">列表项</button>
+            <button type="button" data-md="> ">引用</button>
+            <button type="button" data-md="---" data-newline="true">分隔线</button>
+            <button type="button" data-md="[文字](URL)">链接</button>
+            <button type="button" data-md="![描述](URL)">图片</button>
+          </div>
+          <textarea id="f-content" class="editor" placeholder="# 标题&#10;&#10;在这里用 Markdown 写正文..."></textarea>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:24px;">
+          <button type="submit" class="btn btn-primary" id="save-btn">保存</button>
+          <button type="button" class="btn btn-secondary" id="cancel-btn">取消</button>
+          <button type="button" class="btn btn-danger" id="delete-btn" style="margin-left:auto;display:none;">删除此文</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 提示条 -->
+  <div id="toast" class="toast"></div>
+
+  <footer class="footer">
+    <p>© <span id="footer-year"></span> 个人主页 · 博客管理</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

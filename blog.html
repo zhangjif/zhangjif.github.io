@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>博客 - 个人主页</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 背景层 -->
+  <div id="bg-layer"></div>
+  <div id="bg-overlay"></div>
+
+  <!-- 背景音乐播放器 -->
+  <div id="bgm-player" class="bgm-player">
+    <button id="bgm-toggle" class="bgm-toggle" title="背景音乐">
+      <span class="bgm-icon-play">▶</span>
+      <span class="bgm-icon-pause" style="display:none;">⏸</span>
+    </button>
+    <span class="bgm-label">背景音乐</span>
+  </div>
+
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" id="nav-name">主页</a>
+      <div class="nav-links">
+        <a href="index.html#about">关于</a>
+        <a href="index.html#projects">项目</a>
+        <a href="index.html#papers">论文</a>
+        <a href="blog.html">博客</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 页面标题 -->
+  <header class="page-header">
+    <h1>博客</h1>
+    <p>文字 · 语音 · 视频</p>
+    <a href="admin.html" class="admin-entry" title="管理博客">管理</a>
+  </header>
+
+  <main class="container">
+    <div id="post-grid" class="post-grid">
+      <p class="loading-tip">正在加载文章...</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="footer-year"></span> 个人主页 · Powered by GitHub Pages</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/blog.js"></script>
+</body>
+</html>

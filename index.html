@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人主页</title>
+  <meta name="description" content="个人主页 - 项目、论文与博客" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 背景层 -->
+  <div id="bg-layer"></div>
+  <div id="bg-overlay"></div>
+
+  <!-- 背景音乐播放器（固定在右下角） -->
+  <div id="bgm-player" class="bgm-player">
+    <button id="bgm-toggle" class="bgm-toggle" title="背景音乐">
+      <span class="bgm-icon-play">▶</span>
+      <span class="bgm-icon-pause" style="display:none;">⏸</span>
+    </button>
+    <span class="bgm-label">背景音乐</span>
+  </div>
+
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" id="nav-name">主页</a>
+      <div class="nav-links">
+        <a href="#about">关于</a>
+        <a href="#projects">项目</a>
+        <a href="#papers">论文</a>
+        <a href="blog.html">博客</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero 区域：个人介绍 -->
+  <header id="about" class="hero">
+    <div class="hero-inner">
+      <img id="hero-avatar" class="hero-avatar" src="" alt="avatar" />
+      <h1 id="hero-name" class="hero-name"></h1>
+      <p id="hero-title" class="hero-title"></p>
+      <p id="hero-bio" class="hero-bio"></p>
+      <div id="hero-social" class="hero-social"></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- GitHub 项目展示 -->
+    <section id="projects" class="section">
+      <div class="section-header">
+        <h2 class="section-title">GitHub 项目</h2>
+        <a id="gh-profile-link" class="section-more" href="#" target="_blank">查看全部 →</a>
+      </div>
+      <div id="repo-grid" class="repo-grid">
+        <!-- 仓库卡片由 JS 渲染 -->
+        <p class="loading-tip">正在加载仓库...</p>
+      </div>
+    </section>
+
+    <!-- 论文展示 -->
+    <section id="papers" class="section">
+      <div class="section-header">
+        <h2 class="section-title">发表论文</h2>
+      </div>
+      <div id="paper-list" class="paper-list">
+        <!-- 论文卡片由 JS 渲染 -->
+      </div>
+    </section>
+
+    <!-- 博客入口 -->
+    <section id="blog" class="section">
+      <div class="section-header">
+        <h2 class="section-title">最新博客</h2>
+        <div class="section-more-group">
+          <a href="admin.html" class="admin-entry" title="管理博客">管理</a>
+          <a href="blog.html" class="section-more">查看全部 →</a>
+        </div>
+      </div>
+      <div id="post-preview" class="post-grid">
+        <!-- 博客预览卡片由 JS 渲染 -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p id="footer-text">© <span id="footer-year"></span> 个人主页 · Powered by GitHub Pages</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
