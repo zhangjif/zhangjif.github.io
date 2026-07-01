@@ -10,6 +10,17 @@
       "content": "# 欢迎来到我的博客\n\n这是本博客系统的第一篇文章。本站基于 **GitHub Pages** 托管，支持以下内容形式：\n\n## 支持的功能\n\n- **文字博客**：使用 Markdown 编写，支持标题、列表、代码块、引用等\n- **语音博客**：在文章中嵌入音频播放器\n- **视频博客**：在文章中嵌入视频播放器\n- **混合内容**：同一篇文章可同时包含文字、音频和视频\n\n## 如何写一篇文章\n\n1. 进入 `admin.html` 管理界面\n2. 输入管理密码和 GitHub Token\n3. 点击「新建博客」填写内容\n4. 保存后会自动提交到仓库\n\n## Markdown 示例\n\n### 代码块\n\n```python\ndef hello():\n    print(\"Hello, World!\")\n```\n\n### 引用\n\n> 这是一段引用文字。\n\n---\n\n感谢访问，祝使用愉快！",
       "audio": "",
       "video": ""
+    },
+    {
+      "title": "test",
+      "id": "111",
+      "date": "2026-07-01",
+      "type": "text",
+      "summary": "",
+      "cover": "",
+      "audio": "",
+      "video": "",
+      "content": "#test"
     }
   ]
 }
