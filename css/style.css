@@ -13,7 +13,13 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== 背景层 ===== */
+/* ===== 背景层 =====
+   层级（从底到顶）：
+   - #bg-layer        (-4)  静态背景图
+   - #bg-overlay      (-3)  半透明遮罩，压低背景图对比
+   - #life-bg-canvas  (-2)  康威生命游戏动态层（由 life-bg.js 创建）
+   - 内容区           (>=0)
+*/
 #bg-layer {
   position: fixed;
   inset: 0;
@@ -21,7 +27,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  z-index: -2;
+  z-index: -4;
   transform: scale(1.05);
 }
 
@@ -29,7 +35,7 @@ body {
   position: fixed;
   inset: 0;
   background: #0b1020;
-  z-index: -1;
+  z-index: -3;
 }
 
 /* ===== 背景音乐播放器 ===== */
