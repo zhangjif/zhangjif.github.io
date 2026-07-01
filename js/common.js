@@ -1,21 +1,11 @@
 /**
- * 公共脚本：背景、音乐、导航、页脚年份
- * 被 index / blog / post 页面共享
+ * 公共脚本：音乐、导航、页脚年份
+ * 被 index / blog / post / admin 页面共享
+ * 动态背景由 life-bg.js 负责
  */
 (function () {
   const cfg = window.CONFIG || {};
   const bg = cfg.background || {};
-
-  // ===== 背景图片 =====
-  const bgLayer = document.getElementById("bg-layer");
-  const bgOverlay = document.getElementById("bg-overlay");
-  if (bgLayer && bg.image) {
-    bgLayer.style.backgroundImage = `url("${bg.image}")`;
-  }
-  if (bgOverlay) {
-    bgOverlay.style.background =
-      `rgba(11,16,32,${bg.overlay != null ? bg.overlay : 0.55})`;
-  }
 
   // ===== 导航名称 =====
   const navName = document.getElementById("nav-name");

@@ -11,32 +11,16 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  /* 基础背景色：生命游戏 canvas 在此之上渲染 */
+  background: #0b1020;
 }
 
 /* ===== 背景层 =====
    层级（从底到顶）：
-   - #bg-layer        (-4)  静态背景图
-   - #bg-overlay      (-3)  半透明遮罩，压低背景图对比
+   - body 背景色      基础深色
    - #life-bg-canvas  (-2)  康威生命游戏动态层（由 life-bg.js 创建）
    - 内容区           (>=0)
 */
-#bg-layer {
-  position: fixed;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  z-index: -4;
-  transform: scale(1.05);
-}
-
-#bg-overlay {
-  position: fixed;
-  inset: 0;
-  background: #0b1020;
-  z-index: -3;
-}
 
 /* ===== 背景音乐播放器 ===== */
 .bgm-player {

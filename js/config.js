@@ -51,10 +51,6 @@ const CONFIG = {
 
   // ===== 背景设置 =====
   background: {
-    // 背景图片：替换 assets/images/bg.jpg 即可更换
-    image: "assets/images/bg.jpg",
-    // 背景图片遮罩透明度 (0-1)，数值越小背景越暗
-    overlay: 0.55,
     // 背景音乐：替换 assets/audio/bgm.mp3 即可更换，留空则不播放
     music: "assets/audio/bgm.mp3",
     // 是否自动播放背景音乐（注意：浏览器策略通常禁止自动播放，需用户点击开启）
@@ -66,7 +62,7 @@ const CONFIG = {
   },
 
   // ===== 康威生命游戏动态背景 =====
-  // 启用后会在静态背景图之上叠加动态细胞演化
+  // 启用后作为整页动态背景
   lifeBackground: {
     enabled: true,            // 是否启用
     cellSize: 12,             // 每个细胞像素大小（越小越精细但越耗 CPU）
